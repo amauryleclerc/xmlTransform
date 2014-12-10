@@ -28,7 +28,7 @@ public class BiblioToXhtmlDom {
 			biblioToXhtmlDom.createDoc();
 			biblioToXhtmlDom.createHTML();
 			biblioToXhtmlDom.createDivIndex();
-			biblioToXhtmlDom.DocumentToString();
+			 biblioToXhtmlDom.DocumentToString();
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			System.out.println("ERREUR de parse XML" + e.getMessage());
 			e.printStackTrace();
@@ -69,17 +69,22 @@ public class BiblioToXhtmlDom {
 		
 		div.setAttribute("id", "index");
 		Element ul = outHTML.createElement("ul");
+
 		for (int i = 0; i < this.conferences.getLength(); i++) {
-			Element li = outHTML.createElement("li");
-			NodeList confAtt = this.conferences.item(i).getChildNodes();
-			for (int y = 0; i < confAtt.getLength(); i++) {
-				// System.out.println(confAtt.item(y).getTextContent());
-				if (confAtt.item(y).getLocalName() != null && confAtt.item(y).getLocalName().equals("titre")) {
-					li.setNodeValue(confAtt.item(y).getNodeValue());
-				}
-			}
-			ul.appendChild(li);
+			if (this.conferences.item(i).getNodeName().equals("conference")) {
+				
+				Element li = outHTML.createElement("li");
+				NodeList confAtt = this.conferences.item(i).getChildNodes();
 			
+				for (int y = 0; y < confAtt.getLength(); y++) {
+					if (confAtt.item(y) != null && confAtt.item(y).getNodeName().equals("edition")) {
+						li.setTextContent(confAtt.item(y).getChildNodes().item(1).getTextContent()+" "+confAtt.item(y).getChildNodes().item(3).getTextContent());
+						break;
+					}
+					
+				}
+				ul.appendChild(li);
+			}
 		}
 		div.appendChild(ul);
 		outHTML.getFirstChild().getChildNodes().item(1).appendChild(div);
