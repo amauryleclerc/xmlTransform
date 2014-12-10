@@ -6,7 +6,7 @@
 //
 
 
-package generated;
+package jaxb.metier.generated;
 
 import java.io.Serializable;
 import java.util.ArrayList;
