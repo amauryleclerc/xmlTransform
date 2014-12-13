@@ -28,7 +28,8 @@ public class BiblioToXhtmlDom {
 			biblioToXhtmlDom.createDoc();
 			biblioToXhtmlDom.createHTML();
 			biblioToXhtmlDom.createDivIndex();
-			 biblioToXhtmlDom.DocumentToString();
+			biblioToXhtmlDom.DocumentToString();
+			biblioToXhtmlDom.createDivDetail();
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			System.out.println("ERREUR de parse XML" + e.getMessage());
 			e.printStackTrace();
@@ -67,31 +68,49 @@ public class BiblioToXhtmlDom {
 	private void createDivIndex() {
 		Element div = outHTML.createElement("div");
 		
-		div.setAttribute("id", "index");
+		div.setAttribute("id", "indexConferences");
 		Element ul = outHTML.createElement("ul");
-
+		String confName = "";
+		Element li = null;
+		Element h1 = outHTML.createElement("h1");
+		h1.setTextContent("Index");
+		div.appendChild(h1);
 		for (int i = 0; i < this.conferences.getLength(); i++) {
 			if (this.conferences.item(i).getNodeName().equals("conference")) {
+			if (this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent().equals(confName)) {
+				Element a = outHTML.createElement("a");
+				a.setTextContent(" "+this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(1).getTextContent());
+				a.setAttribute("href", "#");
 				
-				Element li = outHTML.createElement("li");
-				NodeList confAtt = this.conferences.item(i).getChildNodes();
-			
-				for (int y = 0; y < confAtt.getLength(); y++) {
-					if (confAtt.item(y) != null && confAtt.item(y).getNodeName().equals("edition")) {
-						li.setTextContent(confAtt.item(y).getChildNodes().item(1).getTextContent()+" "+confAtt.item(y).getChildNodes().item(3).getTextContent());
-						break;
-					}
-					
+				li.appendChild(a);
+				
+			} else {
+				if (li != null) {
+					ul.appendChild(li);
 				}
-				ul.appendChild(li);
+				//System.out.println( this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent());
+				li = null;
+				li = outHTML.createElement("li");
+				confName = this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent();
+				li.setTextContent(this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent());
+				li.appendChild(outHTML.createElement("br"));
+				Element a = outHTML.createElement("a");
+				a.setTextContent(this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(1).getTextContent());
+				a.setAttribute("href", "#");
+				
+				li.appendChild(a);
+			}
 			}
 		}
+		ul.appendChild(li);
 		div.appendChild(ul);
 		outHTML.getFirstChild().getChildNodes().item(1).appendChild(div);
 		
 	}
 	
 	private void createDivDetail() {
+		Element div = outHTML.createElement("div");
+		div.setAttribute("id", "detailConferences");
 		
 	}
 	
