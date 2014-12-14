@@ -15,7 +15,7 @@ public class IndexConfComparator implements Comparator<Node>{
 
 	   if(result==0){
 		   String annee1 = (String)getChildNode( getChildNode(o1,"edition"),"dateDebut").getTextContent().substring(0, 4);
-		    String annee2 = (String)getChildNode( getChildNode(o2,"edition"),"dateDebut").getTextContent().substring(0, 4);
+		   String annee2 = (String)getChildNode( getChildNode(o2,"edition"),"dateDebut").getTextContent().substring(0, 4);
 		
 		   result = annee1.compareTo(annee2);
 	   }
