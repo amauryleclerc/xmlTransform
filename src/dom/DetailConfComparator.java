@@ -13,9 +13,9 @@ public class DetailConfComparator implements Comparator<Node>{
 	    String annee2 = (String)getChildNode( getChildNode(o2,"edition"),"dateDebut").getTextContent().substring(0, 4);
 	   int result = annee1.compareTo(annee2);
 	   if(result==0){
-		   String s1 = (String)getChildNode( getChildNode(o1,"edition"),"acronyme").getTextContent();
-		   String s2 = (String)getChildNode( getChildNode(o2,"edition"),"acronyme").getTextContent();
-		   result = annee1.compareTo(annee2);
+		   String ac1 = (String)getChildNode( getChildNode(o1,"edition"),"acronyme").getTextContent();
+		   String ac2 = (String)getChildNode( getChildNode(o2,"edition"),"acronyme").getTextContent();
+		   result = ac1.compareTo(ac2);
 	   }
 	    return result;
 
