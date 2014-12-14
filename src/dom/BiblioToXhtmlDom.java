@@ -82,29 +82,29 @@ public class BiblioToXhtmlDom {
 		Element h1 = outHTML.createElement("h1");
 		h1.setTextContent("Index");
 		div.appendChild(h1);
-		for (int i = 0; i < this.conferences.getLength(); i++) {
-			if (this.conferences.item(i).getNodeName().equals("conference")) {
-			if (this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent().equals(confName)) {
-				Element a = outHTML.createElement("a");
-				a.setTextContent(" "+this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(1).getTextContent());
-				a.setAttribute("href", "#"+this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(1).getTextContent());
-				li.appendChild(a);
-				
-			} else {
+		List<Node> lesConferences = nodeListToList(this.conferences, "conference");
+		Collections.sort(lesConferences, new IndexConfComparator());
+		
+		for (Node conference : lesConferences) {
+			if (conference.getNodeName().equals("conference")) {
+				String titre = getChildNode(getChildNode(conference, "edition"),"titre").getTextContent();
+				String acronyme = getChildNode(getChildNode(conference, "edition"),"acronyme").getTextContent();
+				String annee = getChildNode(getChildNode(conference, "edition"),"dateDebut").getTextContent().substring(0, 4);
+			if (!titre.equals(confName)) {
 				if (li != null) {
 					ul.appendChild(li);
 				}
 				li = null;
 				li = outHTML.createElement("li");
-				confName = this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent();
-				li.setTextContent(this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent());
+				confName =titre;
+				li.setTextContent(titre);
 				li.appendChild(outHTML.createElement("br"));
-				Element a = outHTML.createElement("a");
-				a.setTextContent(this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(1).getTextContent());
-				a.setAttribute("href", "#"+this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(1).getTextContent());
-				
-				li.appendChild(a);
 			}
+			Element a = outHTML.createElement("a");
+			a.setTextContent(" "+annee);
+			a.setAttribute("href", "#"+acronyme);
+			li.appendChild(a);
+			
 			}
 		}
 		ul.appendChild(li);
