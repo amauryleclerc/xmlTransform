@@ -94,7 +94,6 @@ public class BiblioToXhtmlDom {
 				if (li != null) {
 					ul.appendChild(li);
 				}
-				//System.out.println( this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent());
 				li = null;
 				li = outHTML.createElement("li");
 				confName = this.conferences.item(i).getChildNodes().item(1).getChildNodes().item(3).getTextContent();
@@ -145,12 +144,27 @@ public class BiblioToXhtmlDom {
 			Element divconf = outHTML.createElement("div");
 			divconf.setAttribute("id",conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
 			divconf.setAttribute("name", conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
-			Element h2 = this.outHTML.createElement("h2");
-			h2.setTextContent(conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
-			divconf.appendChild(h2);
+			Element elementTitreConf = this.outHTML.createElement("h3");
+			elementTitreConf.setTextContent(conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
+			divconf.appendChild(elementTitreConf);
+			NodeList presidents =  getChildNode(getChildNode(conference, "edition"),"presidents").getChildNodes();
+			for(int i =0 ; i<presidents.getLength();i++){
+				if(presidents.item(i).getNodeName().equals("nom")){
+					Element divPresident = outHTML.createElement("div");
+		
+					divPresident.setTextContent("Président : "+presidents.item(i).getTextContent());
+					divconf.appendChild(divPresident);
+				}
+			}
+			Element elementLieu = outHTML.createElement("div");
+			elementLieu.setTextContent(getChildNode(getChildNode(conference, "edition"),"ville").getTextContent()+" - "+getChildNode(getChildNode(conference, "edition"),"pays").getTextContent());
+			divconf.appendChild(elementLieu);
+			
+			
 			ulAnnee.appendChild(divconf);
 		}
-	
+		divAnnee.appendChild(ulAnnee);
+		div.appendChild(divAnnee);
 		outHTML.getFirstChild().getChildNodes().item(1).appendChild(div);
 		
 	}
