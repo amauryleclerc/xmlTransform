@@ -6,7 +6,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class IndexConfComparator implements Comparator<Node>{
-
+	/**
+	 * compare deux noeuds conference pour les trier
+	 * 
+	 */
 	@Override
 	public int compare(Node o1, Node o2) {
 		   String titre1 = (String)getChildNode( getChildNode(o1,"edition"),"titre").getTextContent();
@@ -22,6 +25,12 @@ public class IndexConfComparator implements Comparator<Node>{
 	    return result;
 
 	}
+	/**
+	 * recherche un enfant d'un noeud par son nom
+	 * @param node Noeud parent de l'element recherché
+	 * @param name nom de l'élément recherché
+	 * @return élément recherché
+	 */
 	private Node getChildNode(Node node, String name){
 		NodeList children = node.getChildNodes();
 		Node result =null;

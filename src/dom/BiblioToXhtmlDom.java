@@ -45,7 +45,14 @@ public class BiblioToXhtmlDom {
 		}
 		
 	}
-	
+	/**
+	 * définie le document xml source
+	 * @param xmlPath chemain du xml a parser
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 * 
+	 */
 	public void setXml(String xmlPath) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
@@ -53,6 +60,10 @@ public class BiblioToXhtmlDom {
 		Document doc = db.parse(new File(xmlPath));
 		this.conferences = doc.getElementsByTagName("conferences").item(0).getChildNodes();
 	}
+	/**
+	 * initialise le document de sortie
+	 * @throws ParserConfigurationException
+	 */
 	
 	private void createDoc() throws ParserConfigurationException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -63,7 +74,9 @@ public class BiblioToXhtmlDom {
 		// this.outHTML =
 		// HTMLDOMImplementationImpl.getHTMLDOMImplementation().createHTMLDocument("output");
 	}
-	
+	/**
+	 * créer la base HTML 
+	 */
 	private void createHTML() {
 		Element html = outHTML.createElement("html");
 		Element head = outHTML.createElement("head");
@@ -73,7 +86,9 @@ public class BiblioToXhtmlDom {
 		outHTML.appendChild(html);
 		
 	}
-	
+	/**
+	 * crée la div index du document HTML
+	 */
 	private void createDivIndex() {
 		Element div = outHTML.createElement("div");
 		
@@ -114,7 +129,9 @@ public class BiblioToXhtmlDom {
 		outHTML.getFirstChild().getChildNodes().item(1).appendChild(div);
 		
 	}
-	
+	/**
+	 * crée la div détail du document HTML
+	 */
 	private void createDivDetail() {
 		Element div = outHTML.createElement("div");
 		div.setAttribute("id", "detailConferences");
@@ -215,7 +232,11 @@ public class BiblioToXhtmlDom {
 		outHTML.getFirstChild().getChildNodes().item(1).appendChild(div);
 		
 	}
-	
+	/**
+	 * sérialise le document HTML
+	 * @param htmlPath chemin du document de sortie
+	 * @return
+	 */
 	public String DocumentToString(String htmlPath) {
 		
 		try {
@@ -232,7 +253,12 @@ public class BiblioToXhtmlDom {
 		}
 		
 	}
-	
+	/**
+	 * recherche un enfant d'un noeud par son nom
+	 * @param node Noeud parent de l'element recherché
+	 * @param name nom de l'élément recherché
+	 * @return élément recherché
+	 */
 	private Node getChildNode(Node node, String name) {
 		NodeList children = node.getChildNodes();
 		Node result = null;
@@ -244,7 +270,12 @@ public class BiblioToXhtmlDom {
 		}
 		return result;
 	}
-	
+	/**
+	 * convertie une nodeList en List de Node
+	 * @param nodeList noliste a convertir
+	 * @param name nom des élément de la liste
+	 * @return la List des nodes provenant de la nodeList
+	 */
 	private List<Node> nodeListToList(NodeList nodeList, String name) {
 		List<Node> result = new ArrayList<Node>();
 		for (int i = 0; i < nodeList.getLength(); i++) {

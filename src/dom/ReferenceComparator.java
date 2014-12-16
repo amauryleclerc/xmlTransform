@@ -7,6 +7,10 @@ import org.w3c.dom.NodeList;
 
 public class ReferenceComparator implements Comparator<Node> {
 	
+	/**
+	 * compare deux noeuds article pour les trier
+	 * 
+	 */
 	@Override
 	public int compare(Node o1, Node o2) {
 		String nom1 = (String) getChildNode(getChildNode(o1, "auteurs"), "auteur").getTextContent();
@@ -14,7 +18,12 @@ public class ReferenceComparator implements Comparator<Node> {
 		return nom1.compareTo(nom2);
 		
 	}
-	
+	/**
+	 * recherche un enfant d'un noeud par son nom
+	 * @param node Noeud parent de l'element recherché
+	 * @param name nom de l'élément recherché
+	 * @return élément recherché
+	 */
 	private Node getChildNode(Node node, String name) {
 		NodeList children = node.getChildNodes();
 		Node result = null;
