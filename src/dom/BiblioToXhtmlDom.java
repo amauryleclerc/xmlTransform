@@ -75,8 +75,6 @@ public class BiblioToXhtmlDom {
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		this.outHTML = db.newDocument();
 		
-		// this.outHTML =
-		// HTMLDOMImplementationImpl.getHTMLDOMImplementation().createHTMLDocument("output");
 	}
 	/**
 	 * créer la base HTML 
