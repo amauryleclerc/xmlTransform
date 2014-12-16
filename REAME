@@ -3,12 +3,7 @@ Auteurs
 Amaury LECLERC amaury.leclerc@etu.univ-nantes.fr
 Thomas Martineau
 
-A Faire :
-Partie DOM
-- afficher le type de référence correct dans les statistiques
-- afficher le nombre réel de référence
-- afficher la meilleur référence avec lien
-- afficher le nom entier de la conference dans l entete de celle-ci
+
 
 Pour aller plus loin (questions bonux)
 * Ne pas faire une division détail contenant des divisions pour chaque conférence mais une page

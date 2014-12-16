@@ -30,6 +30,10 @@ public class BiblioToXhtmlDom {
 	public static void main(String args[]) {
 		String xmlPath = System.getProperty("user.dir") + "/TALN-RECITAL-BIB.xml";
 		String htmlPath = System.getProperty("user.dir") + "/output.html";
+		
+		//String xmlPath = args[0];
+	//	String htmlPath = args[1];
+		
 		BiblioToXhtmlDom biblioToXhtmlDom = new BiblioToXhtmlDom();
 		try {
 			biblioToXhtmlDom.setXml(xmlPath);
@@ -37,7 +41,7 @@ public class BiblioToXhtmlDom {
 			biblioToXhtmlDom.createHTML();
 			biblioToXhtmlDom.createDivIndex();
 			biblioToXhtmlDom.createDivDetail();
-			biblioToXhtmlDom.DocumentToString(htmlPath);
+			biblioToXhtmlDom.documentOut(htmlPath);
 			
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			System.out.println("ERREUR de parse XML" + e.getMessage());
@@ -164,8 +168,11 @@ public class BiblioToXhtmlDom {
 			divconf.setAttribute("id", conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
 			divconf.setAttribute("name", conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
 			Element elementTitreConf = this.outHTML.createElement("h3");
-			elementTitreConf.setTextContent(conference.getChildNodes().item(1).getChildNodes().item(1).getTextContent());
+			elementTitreConf.setTextContent(getChildNode(getChildNode(conference, "edition"), "titre").getTextContent());
 			divconf.appendChild(elementTitreConf);
+			Element divAnneeConf = outHTML.createElement("div");
+			divAnneeConf.setTextContent("Année : "+annee);
+			divconf.appendChild(divAnneeConf);
 			NodeList presidents = getChildNode(getChildNode(conference, "edition"), "presidents").getChildNodes();
 			for (int i = 0; i < presidents.getLength(); i++) {
 				if (presidents.item(i).getNodeName().equals("nom")) {
@@ -196,17 +203,34 @@ public class BiblioToXhtmlDom {
 				divStatistiques.setTextContent("aucune statistique");
 				divconf.appendChild(divStatistiques);
 			}
+			List<Node> lesReferences = nodeListToList(getChildNode(conference, "articles").getChildNodes(), "article");
+			Collections.sort(lesReferences, new ReferenceComparator());
+			Element divNbRef = outHTML.createElement("div");
+			divNbRef.setTextContent("Nombre de références : "+lesReferences.size());
+			divconf.appendChild(divNbRef);
+			NodeList meilleursRef = getChildNode(getChildNode(conference, "edition"),"meilleurArticle").getChildNodes();
+			for(int i =0; i<meilleursRef.getLength();i++){
+				if(meilleursRef.item(i).getNodeName().equals("articleId")){
+					Element divMeilleurRef = outHTML.createElement("div");
+					divMeilleurRef.setTextContent("Meilleur Ref :");
+					Element aMeilleurRef = outHTML.createElement("a");
+					aMeilleurRef.setTextContent(meilleursRef.item(i).getTextContent());
+					aMeilleurRef.setAttribute("href", "#"+meilleursRef.item(i).getTextContent());
+					divMeilleurRef.appendChild(aMeilleurRef);
+					divconf.appendChild(divMeilleurRef);
+				}
+			}
 			Element h4Reference = outHTML.createElement("h4");
 			h4Reference.setTextContent("Références :");
 			divconf.appendChild(h4Reference);
 			Element ulReference = outHTML.createElement("ul");
-			List<Node> lesReferences = nodeListToList(getChildNode(conference, "articles").getChildNodes(), "article");
-			Collections.sort(lesReferences, new ReferenceComparator());
+		
 			for (Node reference : lesReferences) {
 				Element divReference = outHTML.createElement("div");
 				Element divTitre = outHTML.createElement("div");
 				Element divAuteur = outHTML.createElement("div");
 				Element bAuteur = outHTML.createElement("b");
+				divReference.setAttribute("id", reference.getAttributes().getNamedItem("id").getTextContent());
 				divTitre.setTextContent(getChildNode(reference, "titre").getTextContent());
 				NodeList auteurs = getChildNode(reference, "auteurs").getChildNodes();
 				String lesauteurs = "";
@@ -237,7 +261,7 @@ public class BiblioToXhtmlDom {
 	 * @param htmlPath chemin du document de sortie
 	 * @return
 	 */
-	public String DocumentToString(String htmlPath) {
+	public String documentOut(String htmlPath) {
 		
 		try {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
