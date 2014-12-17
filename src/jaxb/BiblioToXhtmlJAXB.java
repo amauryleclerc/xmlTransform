@@ -16,34 +16,40 @@ import javax.xml.bind.Unmarshaller;
 import jaxb.metier.generated.Conferences;
 import jaxb.metier.generated.Conferences.Conference;
 
+/**
+ * 
+ * @author E14D720E-Martineau Thomas
+ * 
+ */
 public class BiblioToXhtmlJAXB {
 
 	BufferedWriter writer;
 	JAXBContext jc;
 	Unmarshaller um;
-	private Conference uneConference=null;
-	private Conferences conference=null;
+	private Conference conference = null;
 	private ArrayList<Conference> conferences = new ArrayList<>();
-	private ArrayList<String> acronyme = new ArrayList<>();
-	private ArrayList<String> ville = new ArrayList<>();
-	private ArrayList<String> pays = new ArrayList<>();
-	private ArrayList<String> president = new ArrayList<>();
-	private Iterator<Conference> uneListeDeConference = null;
-	Conferences conf=null;
+	private ArrayList<String> acronyme = new ArrayList<String>();
+	private ArrayList<String> ville = new ArrayList<String>();
+	private ArrayList<String> pays = new ArrayList<String>();
+	private ArrayList<String> president = new ArrayList<String>();
+	private ArrayList<String> siteweb = new ArrayList<String>();
+	private Iterator<Conference> ListeConference = null;
+
+	Conferences conf = null;
 	private ArrayList<String> refBestArticle = new ArrayList<>();
 
-
+	// Constructeur
 	public BiblioToXhtmlJAXB() {
 
 		try {
+			// Objet principal pour les opérations de transformation
 			jc = JAXBContext.newInstance("jaxb.metier.generated");
+			// Objet de type Unmarshaller pour transformer le doc XML
 			um = jc.createUnmarshaller();
-			conf = (Conferences) um.unmarshal(new File(
-					"TALN-RECITAL-BIB.xml"));
+			// méthode unmarshall qui se charge de traiter un doc XML
+			conf = (Conferences) um.unmarshal(new File("TALN-RECITAL-BIB.xml"));
 			writer = new BufferedWriter(new FileWriter("conf.html"));
 			conferences = (ArrayList<Conference>) conf.getConference();
-			
-			
 
 		} catch (JAXBException | IOException e) {
 			e.printStackTrace();
@@ -71,7 +77,14 @@ public class BiblioToXhtmlJAXB {
 	public void createDivIndex() {
 		String idIndex = "index";
 		HashMap<String, TreeSet<Integer>> titres = new HashMap<>();
-
+		//Ecriture du début de la division
+		try {
+			writer.write("<div id=\"" + idIndex + "\">");
+			writer.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//Récupération des Titres et des Années
 		for (Conference c : conferences) {
 			if (titres.get(c.getEdition().getTitre()) != null) {
 				TreeSet<Integer> tab = titres.get(c.getEdition().getTitre());
@@ -83,81 +96,102 @@ public class BiblioToXhtmlJAXB {
 				titres.put(c.getEdition().getTitre(), tab);
 			}
 		}
+		//Ecriture des titres et des années correspondandtes dans une liste
 		try {
-			writer.write("<div id=\"" + idIndex
-					+ "\"><h>Index Conferences</h1><TABLE BORDER=\\" + 1
+			writer.write("<h1>Index Conferences</h1><TABLE BORDER=\\" + 1
 					+ "\"> ");
 			for (String s : titres.keySet()) {
-				writer.write("<th>" + s + "</th>");
+				writer.write("<ul>" + s + "<br>");
 				for (Integer i : titres.get(s)) {
-					writer.write("<tr><th><a href=\"" + i + "\">" + i
-							+ "</a></th></tr>");
+					writer.write("<li><a href=\"" + i + "\">" + i
+							+ " </a></li>");
 				}
-				writer.write("</div>\n");
 				writer.flush();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}	
-	public void createDivListIndex() {
-
-		/* ArrayList<String> acronyme = new ArrayList<>();
-		 ArrayList<String> ville = new ArrayList<>();
-		 ArrayList<String> president = new ArrayList<>();
-		 ArrayList<String> pays = new ArrayList<>();
-		 ArrayList<String> refBestArticle = new ArrayList<>();*/
-		 String bestArticles="";
-		String presidents="";
-		//Iterator<Conference> uneListeDeConference = null;
-
-
-		uneListeDeConference = conferences.iterator();
-	
-		while(uneListeDeConference.hasNext()){
-			uneConference = uneListeDeConference.next();
-			acronyme.add(uneConference.getEdition().getAcronyme());
-			ville.add(uneConference.getEdition().getVille());
-			pays.add(uneConference.getEdition().getPays());
-			for(int m=0;m<uneConference.getEdition().getPresidents().getNom().size();m++){
-				presidents = presidents + uneConference.getEdition().getPresidents().getNom().get(m)+ " ";
-			}
-			president.add(presidents);
-			for(int m=0;m<uneConference.getEdition().getMeilleurArticle().getArticleId().size();m++){
-				bestArticles = bestArticles + uneConference.getEdition().getMeilleurArticle().getArticleId().get(m)+" ";
-			}
-			refBestArticle.add(bestArticles);
-			/*for(int j=0;j<acronyme.size();j++){
-				System.out.println("Ville : "+ville.get(j));
-				System.out.println("acronyme : "+acronyme.get(j) );
-				System.out.println("presidents"+president.get(j));
-			}*/	
-		}
+		//Ecriture de la fin de première division
 		try {
-			writer.write("<ul>");
+			writer.write("</div>");
+			writer.flush();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		/*
-		 * Ecriture de l'entête Anacronyme/ President / lieu
-		 */
-		for(int j=0;j<acronyme.size();j++){
-			try{
-				
-				writer.write("<tr><th colspan=3 >"+acronyme.get(j)+"</th></tr>"
-							+ "<tr><td>Presidents : "+president.get(j)+"</td>"
-							+ "<td> Localisation : "+ville.get(j)+"-"+pays.get(j)+"</td>"
-							+ "<td>"+refBestArticle.get(j)+"</td></tr>");
-			}catch(IOException e){
+
+	}
+/*
+ * Fonction permettant de créer la liste des conférences
+ */
+	public void createDivListIndex() {
+
+		ListeConference = conferences.iterator();
+
+		while (ListeConference.hasNext()) {
+
+			conference = ListeConference.next();
+			//On récupère l'acronyme
+			acronyme.add(conference.getEdition().getAcronyme());
+			//On récupère les informations géographique (ville et Pays)
+			ville.add(conference.getEdition().getVille());
+			pays.add(conference.getEdition().getPays());
+			//On récupère les site web de la conférence
+			siteweb.add(conference.getEdition().getSiteWeb());
+
+			
+			//On récupère les présidents
+			String presidents = "";
+			for (int m = 0; m < conference.getEdition().getPresidents()
+					.getNom().size(); m++) {
+				presidents = presidents
+						+ conference.getEdition().getPresidents().getNom()
+								.get(m) + " / ";
+
+			}
+			president.add(presidents);
+			
+			//On récupères les id des meilleurs articles correspondants à la conférence   
+			String bestArticles = "";
+			for (int m = 0; m < conference.getEdition().getMeilleurArticle()
+					.getArticleId().size(); m++) {
+				bestArticles = bestArticles
+						+ conference.getEdition().getMeilleurArticle()
+								.getArticleId().get(m) + " / ";
+
+			}
+			refBestArticle.add(bestArticles);
+
+		}
+		//Ecriture du début de la div list de conferences
+		try {
+			writer.write("<h1>Liste Conferences</h1><ul>");
+			writer.flush();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		//ECriture des informations dans des tableaux contenant les informations des conférences
+		for (int i = 0; i < 13; i++) {
+			try {
+				writer.write("<tr><th colspan=3 >" + acronyme.get(i)
+						+ "</th></tr>" + "<tr><td>Presidents : "
+						+ president.get(i) + "</td>" + "<td> Localisation : "
+						+ ville.get(i) + "-" + pays.get(i) + "</td>" + "<td>"
+						+ refBestArticle.get(i) + "</td></tr>"
+						+ "<tr><td colspan=3>Site Internet : " + siteweb.get(i)
+						+ "</td></tr>");
+
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		//Ecriture de fin de la div
 		try {
 			writer.write("</ul>");
+			writer.flush();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-			
+
 	}
 
 	/*
@@ -169,18 +203,18 @@ public class BiblioToXhtmlJAXB {
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-			}
+		}
 	}
 
 	/*
 	 * Fonction Principale
 	 */
-	public static void main(String[] args){
-		BiblioToXhtmlJAXB bibi = new BiblioToXhtmlJAXB();
-		bibi.startHtmlDoc();
-		bibi.createDivIndex();
-		bibi.createDivListIndex();
-		bibi.finishHtmlDoc();
+	public static void main(String[] args) {
+		BiblioToXhtmlJAXB bibli = new BiblioToXhtmlJAXB();
+		bibli.startHtmlDoc();
+		bibli.createDivIndex();
+		bibli.createDivListIndex();
+		bibli.finishHtmlDoc();
 	}
 
 }
