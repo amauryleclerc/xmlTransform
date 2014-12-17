@@ -1,12 +1,37 @@
 Projet xmlTransform
-Auteurs
-Amaury LECLERC amaury.leclerc@etu.univ-nantes.fr
-Thomas Martineau
 
+Auteurs et coordonnées.
+Amaury LECLERC : amaury.leclerc@etu.univ-nantes.fr
+Thomas Martineau: thomas.martineau1@etu.univ-nantes.fr
 
+Descriptif : Le but du projet est de transformer un fichier XML en xHTML en choisissant deux technos
+différentes. 
+
+Nos choix ce sont portés sur le DOM et le JAXB : 
+Le fichier du projet contient un code java implémentant l'approche DOM, API générée et feuille
+XSchema pour l'approche JAXB).
+
+Le premier est choix est le DOM car, il permet de parcourir librement l'arbre xml, et permet également
+la possibilité de la modification du contenu et de la structure de l'arbre xml. Cependant, il doit traiter
+tout le document avant d'exploiter les résultats. DOnc le DOM est gourmand en mémoire.
+
+Le deuxième choix est JAXB car, il facilite la manipulation d'un document XML,  aucune connaissance de XML 
+ou de la manière de traiter un document n'est requise. Enfin les ressources requises sont moins importantes 
+qu'un DOM
+
+Conseil d'utilisation : Il suffit d'importer le projet git sous Eclipse, puis de run les classes BiblioToXhtmlDom.java
+et BiblioToXhtmlJAXB.java pour créer les pages html généré à partir du document XML
+
+Etat d'avancement : 
+L'approche par DOM, est terminer.
+L'approche par JAXb, n'est pas terminer. Il manque l'ancrage des années, ainsi que certaines informations à inclure
+dans la liste de reférence au conference.
+
+Pour les deux approches, une feuille de style peux être créer pour un meilleur rendu.
 
 Pour aller plus loin (questions bonux)
 * Ne pas faire une division détail contenant des divisions pour chaque conférence mais une page
 HTML dédiée pour chaque conférence (et par conséquent un lien pour y accéder à partir de l'index)
 * Rajouter une division index des noms d’auteurs avec le nombre de publication de chaque auteur
 quelque soit la conférence
+
