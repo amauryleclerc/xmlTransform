@@ -1,0 +1,12 @@
+Projet xmlTransform
+Auteurs
+Amaury LECLERC amaury.leclerc@etu.univ-nantes.fr
+Thomas Martineau
+
+
+
+Pour aller plus loin (questions bonux)
+* Ne pas faire une division détail contenant des divisions pour chaque conférence mais une page
+HTML dédiée pour chaque conférence (et par conséquent un lien pour y accéder à partir de l'index)
+* Rajouter une division index des noms d’auteurs avec le nombre de publication de chaque auteur
+quelque soit la conférence
